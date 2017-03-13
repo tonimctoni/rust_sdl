@@ -1,0 +1,11 @@
+[package]
+name = "rust_sdl"
+version = "0.1.0"
+authors = ["tonimctoni <nicoflam@outlook.com>"]
+
+[dependencies]
+rand = "0.3"
+sdl2 = "0.25"
+sdl2_image = "0.25"
+sdl2_mixer = "0.25"
+sdl2_ttf = "0.25"
