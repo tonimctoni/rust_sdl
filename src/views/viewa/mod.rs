@@ -38,8 +38,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                     match mouse_btn{
                         Left => {
                             shipdock.manage_left_click(x, y);
-                            //for several ship_unit sources might want to use "or"
-                            draggedshipunit.manage_leftclicked_ship_unit(shipunittray.get_ship_unit_index_at(x, y) , x, y);
+                            draggedshipunit.manage_leftclicked_ship_unit(shipunittray.get_ship_unit_index_at(x, y).or(shipdock.manage_leftclicked_ship_unit(x, y)) , x, y);
                         }
                         _ => {}
                     }
@@ -55,7 +54,8 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                     use sdl2::mouse::Mouse::*;
                     match mouse_btn{
                         Left => {
-                            draggedshipunit.manage_unleftclick();
+                            // draggedshipunit.manage_unleftclick();
+                            shipdock.manage_unleftclicked_ship_unit(draggedshipunit.manage_unleftclick(), x, y);
                         }
                         _ => {}
                     }
@@ -69,10 +69,6 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
         shipunittray.draw(gm);
         shipdock.draw(gm);
         draggedshipunit.draw(gm);
-        // shiptray.draw(gm);
-        // gm.set_draw_color(Color::RGB(127, 0, 155));
-        // gm.fill_rect(Rect::new(8,8,32,32));
-        // gm.draw_ship_unit(1,10,10);
         fpscapper.cap();
         gm.present();
     }

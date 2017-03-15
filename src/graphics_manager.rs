@@ -57,45 +57,17 @@ impl GraphicsManager {
     }
 
     pub fn draw_ship_unit(&mut self, index: usize, x: i32, y: i32){
-        self.renderer.copy(&self.ship_units[index], None/*Some(Rect::new(0,0,SHIP_UNIT_WIDTH,SHIP_UNIT_HEIGHT))*/, Some(Rect::new(x,y,SHIP_UNIT_WIDTH,SHIP_UNIT_HEIGHT))).unwrap();
+        self.renderer.copy(&self.ship_units[index], None, Some(Rect::new(x,y,SHIP_UNIT_WIDTH,SHIP_UNIT_HEIGHT))).unwrap();
     }
 
     pub fn draw_ship(&mut self, index: usize, x: i32, y: i32){
-        self.renderer.copy(&self.ships[index], None/*Some(Rect::new(0,0,SHIP_UNIT_WIDTH,SHIP_UNIT_HEIGHT))*/, Some(Rect::new(x,y,SHIP_WIDTH,SHIP_HEIGHT))).unwrap();
+        self.renderer.copy(&self.ships[index], None, Some(Rect::new(x,y,SHIP_WIDTH,SHIP_HEIGHT))).unwrap();
     }
 
     pub fn draw_ship_icon(&mut self, index: usize, x: i32, y: i32){
-        self.renderer.copy(&self.ship_icons[index], None/*Some(Rect::new(0,0,SHIP_UNIT_WIDTH,SHIP_UNIT_HEIGHT))*/, Some(Rect::new(x,y,SHIP_ICON_WIDTH,SHIP_ICON_HEIGHT))).unwrap();
+        self.renderer.copy(&self.ship_icons[index], None, Some(Rect::new(x,y,SHIP_ICON_WIDTH,SHIP_ICON_HEIGHT))).unwrap();
     }
 
-    // pub fn load_ship_units(&mut self){
-    //     if self.ship_units.is_none(){
-    //         self.ship_units=Some(box [
-    //             self.renderer.load_texture(Path::new("assets/ship_units/cargo_unit.png")).unwrap(),
-    //             self.renderer.load_texture(Path::new("assets/ship_units/laser_unit.png")).unwrap(),
-    //             self.renderer.load_texture(Path::new("assets/ship_units/missile_unit.png")).unwrap(),
-    //             self.renderer.load_texture(Path::new("assets/ship_units/plasma_unit.png")).unwrap(),
-    //             self.renderer.load_texture(Path::new("assets/ship_units/scanner_unit.png")).unwrap(),
-    //             self.renderer.load_texture(Path::new("assets/ship_units/shield_unit.png")).unwrap(),
-    //             self.renderer.load_texture(Path::new("assets/ship_units/engine_unit.png")).unwrap(),
-    //             self.renderer.load_texture(Path::new("assets/ship_units/cloak_unit.png")).unwrap(),
-    //             ]);
-    //     }
-    // }
-
-    // pub fn load_image(&mut self){
-    //     self.some_image=Some(box self.renderer.load_texture(Path::new("assets/brick.png")).unwrap());
-    // }
-
-    // pub fn draw_some_image(&mut self, rect: Rect){
-    //     if let Some(ref mut x)=self.some_image{
-    //         let TextureQuery{width, height, ..}=x.query();
-    //         let this_rect=Rect::new(0,0,width,height);
-    //         self.renderer.copy(x, Some(this_rect), Some(rect)).unwrap();
-    //     } else {
-    //         panic!("panic!");
-    //     }
-    // }
     // pub fn rounded_rectangle(&mut self, x1: i16, y1: i16, x2: i16, y2: i16, rad: i16, color: Color){
     //     self.renderer.rounded_rectangle(x1,y1,x2,y2,rad,color).unwrap();
     // }

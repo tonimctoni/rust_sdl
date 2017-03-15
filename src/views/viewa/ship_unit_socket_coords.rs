@@ -1,6 +1,6 @@
 
 
-pub const SHIP_00_SOCKET_COORDS: [(i32,i32);12] = [
+pub static SHIP_00_SOCKET_COORDS: [(i32,i32);12] = [
 (132, 139),
 (166, 139),
 (206, 139),
@@ -15,7 +15,7 @@ pub const SHIP_00_SOCKET_COORDS: [(i32,i32);12] = [
 (240, 207),
 ];
 
-pub const SHIP_01_SOCKET_COORDS: [(i32,i32);32] = [
+pub static SHIP_01_SOCKET_COORDS: [(i32,i32);32] = [
 (49, 25),
 (83, 25),
 (288, 25),
@@ -50,7 +50,7 @@ pub const SHIP_01_SOCKET_COORDS: [(i32,i32);32] = [
 (322, 298),
 ];
 
-pub const SHIP_02_SOCKET_COORDS: [(i32,i32);4] = [
+pub static SHIP_02_SOCKET_COORDS: [(i32,i32);4] = [
 (135, 266),
 (169, 268),
 (203, 268),
