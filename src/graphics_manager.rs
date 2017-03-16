@@ -4,7 +4,6 @@ use std::path::Path;
 use sdl2_image::LoadTexture;
 use sdl2::rect::Rect;
 use sdl2::pixels::Color;
-// use sdl2::render::TextureQuery;
 use sdl2_ttf::Sdl2TtfContext;
 use sdl2_ttf::Font;
 use sdl2::pixels::PixelFormatEnum;
@@ -14,11 +13,14 @@ type EightShipUnits = [Texture;8];
 type FiveShips = [Texture;5];
 type FiveShipIcons = [Texture;5];
 type FiveRenderedTexts = [Texture;5];
+type OneButton = [Texture;1];
 pub struct GraphicsManager<'a> {
     renderer: Renderer<'static>,
     ship_units: Box<EightShipUnits>,
     ships: Box<FiveShips>,
     ship_icons: Box<FiveShipIcons>,
+    unpressed_buttons: Box<OneButton>,
+    pressed_buttons: Box<OneButton>,
     bitstream_vera_32:Font<'a>,
     texts: Box<FiveRenderedTexts>,
 }
@@ -31,6 +33,9 @@ const SHIP_HEIGHT: u32 = 400;
 
 const SHIP_ICON_WIDTH: u32 = 80;
 const SHIP_ICON_HEIGHT: u32 = 80;
+
+const BUTTON_WIDTH: u32 = 32;
+const BUTTON_HEIGHT: u32 = 32;
 
 impl<'a> GraphicsManager<'a> {
     pub fn init(renderer: Renderer<'static>, ttf_context: &'a Sdl2TtfContext) -> GraphicsManager<'a>{
@@ -59,6 +64,12 @@ impl<'a> GraphicsManager<'a> {
                 renderer.load_texture(Path::new("assets/ship_icons/ship_icon03.png")).unwrap(),
                 renderer.load_texture(Path::new("assets/ship_icons/ship_icon04.png")).unwrap(),
             ],
+            unpressed_buttons: box[
+                renderer.load_texture(Path::new("assets/buttons/ok_blue.png")).unwrap(),
+            ],
+            pressed_buttons: box[
+                renderer.load_texture(Path::new("assets/buttons/ok_red.png")).unwrap(),
+            ],
             bitstream_vera_32: ttf_context.load_font(Path::new("assets/ttf/bitstream_vera_sans/Vera.ttf"), 32).unwrap(),
             texts: box [
                 renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
@@ -72,12 +83,24 @@ impl<'a> GraphicsManager<'a> {
     }
 
     pub fn set_text_with_bitstream_vera_32(&mut self, index: usize, text: &str, color: Color){
-        self.texts[index]=self.renderer.create_texture_from_surface(self.bitstream_vera_32.render(text).blended(color).unwrap()).unwrap();
+        if text.len()>0{
+            self.texts[index]=self.renderer.create_texture_from_surface(self.bitstream_vera_32.render(text).blended(color).unwrap()).unwrap();
+        } else {
+            self.texts[index]=self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap();
+        }
     }
 
     pub fn draw_text(&mut self, index: usize, x: i32, y: i32){
         let TextureQuery{width, height, ..}=self.texts[index].query();
         self.renderer.copy(&self.texts[index], None, Some(Rect::new(x,y,width,height))).unwrap();
+    }
+
+    pub fn draw_unpressed_button(&mut self, index: usize, x: i32, y: i32){
+        self.renderer.copy(&self.unpressed_buttons[index], None, Some(Rect::new(x,y,BUTTON_WIDTH,BUTTON_HEIGHT))).unwrap();
+    }
+
+    pub fn draw_pressed_button(&mut self, index: usize, x: i32, y: i32){
+        self.renderer.copy(&self.pressed_buttons[index], None, Some(Rect::new(x,y,BUTTON_WIDTH,BUTTON_HEIGHT))).unwrap();
     }
 
     pub fn draw_ship_unit(&mut self, index: usize, x: i32, y: i32){

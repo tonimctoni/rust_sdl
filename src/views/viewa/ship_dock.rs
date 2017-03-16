@@ -6,7 +6,6 @@ use sdl2::pixels::Color;
 use views::viewa::ship_unit_socket_coords::SHIP_00_SOCKET_COORDS;
 use views::viewa::ship_unit_socket_coords::SHIP_01_SOCKET_COORDS;
 use views::viewa::ship_unit_socket_coords::SHIP_02_SOCKET_COORDS;
-// use sdl2::mouse::Mouse;
 
 const OUTER_BORDER_COLOR: Color = Color::RGB(75, 75, 75);
 const SELECTED_BORDER_COLOR: Color = Color::RGB(0, 127, 0);

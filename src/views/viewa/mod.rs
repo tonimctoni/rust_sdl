@@ -4,6 +4,7 @@ mod ship_dock;
 mod dragged_ship_unit;
 mod ship_unit_socket_coords;
 mod text_input;
+mod button;
 
 use views::View;
 use sdl2::EventPump;
@@ -15,12 +16,14 @@ use self::ship_dock::ShipDock;
 use self::dragged_ship_unit::DraggedShipUnit;
 use views::Drawable;
 use self::text_input::TextInput;
+use self::button::Button;
 
 pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &mut FpsCapper) -> Option<View>{
     let shipunittray=ShipUnitTray::new(10,10);
     let mut shipdock=ShipDock::new(10,50,0);
     let mut draggedshipunit=DraggedShipUnit::new();
     let mut textinput=TextInput::new(10, 475, 0);
+    let mut ok_button=Button::new(10+256+5,475,0);
     loop{
         for event in event_pump.poll_iter(){
             use sdl2::event::Event::*;
@@ -43,6 +46,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                             shipdock.manage_left_click(x, y);
                             draggedshipunit.manage_leftclicked_ship_unit(shipunittray.get_ship_unit_index_at(x, y).or(shipdock.manage_leftclicked_ship_unit(x, y)) , x, y);
                             textinput.manage_left_click(x, y);
+                            ok_button.manage_left_click(x, y);
                         }
 
                         Right => {
@@ -64,6 +68,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                         Left => {
                             // draggedshipunit.manage_unleftclick();
                             shipdock.manage_unleftclicked_ship_unit(draggedshipunit.manage_unleftclick(), x, y);
+                            ok_button.manage_unleft_click(x, y);
                         }
                         _ => {}
                     }
@@ -87,6 +92,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
         shipdock.draw(gm);
         draggedshipunit.draw(gm);
         textinput.draw(gm);
+        ok_button.draw(gm);
         fpscapper.cap();
         gm.present();
     }

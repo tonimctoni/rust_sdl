@@ -7,7 +7,6 @@ use self::viewa::viewa;
 use sdl2::EventPump;
 use fps_capper::FpsCapper;
 use graphics_manager::GraphicsManager;
-// use ttf_manager::TtfManager;
 
 macro_rules! create_view_enum {
     ($( $function_name:ident),*) => {

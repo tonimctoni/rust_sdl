@@ -18,7 +18,7 @@ pub struct TextInput {
 
 impl TextInput {
     pub fn new(x: i32, y: i32, texts_index: usize) -> TextInput {
-        TextInput{x: x, y: y, selected: false, text: String::with_capacity(32), texts_index: texts_index}
+        TextInput{x: x, y: y, selected: false, text: String::with_capacity(16), texts_index: texts_index}
     }
 
     pub fn manage_left_click(&mut self, x: i32, y: i32){
@@ -37,8 +37,10 @@ impl TextInput {
     }
 
     pub fn manage_backspace_press(&mut self, gm: &mut GraphicsManager){
-        self.text.pop();
-        gm.set_text_with_bitstream_vera_32(self.texts_index, &self.text, TEXT_COLOR);
+        if self.selected{
+            self.text.pop();
+            gm.set_text_with_bitstream_vera_32(self.texts_index, &self.text, TEXT_COLOR);
+        }
     }
 }
 
