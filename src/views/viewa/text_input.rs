@@ -50,7 +50,7 @@ impl Drawable for TextInput {
             true => gm.set_draw_color(SELECTED_BKG_COLOR),
             false => gm.set_draw_color(UNSELECTED_BKG_COLOR),
         }
-        gm.fill_rect(Rect::new(self.x, self.y, 256, 32));
+        gm.fill_rect(Rect::new(self.x, self.y, 256, 38));
         gm.draw_text(self.texts_index, self.x, self.y);
     }
 }

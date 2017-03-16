@@ -20,7 +20,7 @@ use self::button::Button;
 
 pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &mut FpsCapper) -> Option<View>{
     let shipunittray=ShipUnitTray::new(10,10);
-    let mut shipdock=ShipDock::new(10,50,0);
+    let mut shipdock=ShipDock::new(10,50,2);
     let mut draggedshipunit=DraggedShipUnit::new();
     let mut textinput=TextInput::new(10, 475, 0);
     let mut ok_button=Button::new(10+256+5,475,0);
@@ -66,7 +66,6 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                     use sdl2::mouse::Mouse::*;
                     match mouse_btn{
                         Left => {
-                            // draggedshipunit.manage_unleftclick();
                             shipdock.manage_unleftclicked_ship_unit(draggedshipunit.manage_unleftclick(), x, y);
                             ok_button.manage_unleft_click(x, y);
                         }
@@ -79,7 +78,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                 // }
 
                 TextInput{text, ..} => {
-                    println!("TextInput -> {:?}", text);
+                    // println!("TextInput -> {:?}", text);
                     textinput.manage_text_input(text, gm)
                 }
 

@@ -6,6 +6,8 @@ use sdl2::pixels::Color;
 use views::viewa::ship_unit_socket_coords::SHIP_00_SOCKET_COORDS;
 use views::viewa::ship_unit_socket_coords::SHIP_01_SOCKET_COORDS;
 use views::viewa::ship_unit_socket_coords::SHIP_02_SOCKET_COORDS;
+use views::viewa::ship_unit_socket_coords::SHIP_03_SOCKET_COORDS;
+use views::viewa::ship_unit_socket_coords::SHIP_04_SOCKET_COORDS;
 
 const OUTER_BORDER_COLOR: Color = Color::RGB(75, 75, 75);
 const SELECTED_BORDER_COLOR: Color = Color::RGB(0, 127, 0);
@@ -22,9 +24,20 @@ pub struct ShipDock {
 }
 
 impl ShipDock {
+    fn ship_index_to_coords_ref(ship_index: usize) -> &'static [(i32,i32)]{
+        match ship_index{
+                        0 => &SHIP_00_SOCKET_COORDS,
+                        1 => &SHIP_01_SOCKET_COORDS,
+                        2 => &SHIP_02_SOCKET_COORDS,
+                        3 => &SHIP_03_SOCKET_COORDS,
+                        4 => &SHIP_04_SOCKET_COORDS,
+                        _ => panic!("manage_left_click got a wrong ship_index"),
+                    }
+    }
+
     pub fn new(x: i32, y: i32, ship_index: usize) -> ShipDock{
         assert!(ship_index<5);
-        ShipDock{x:x, y:y, ship_index:ship_index, ship_unit_sockets: [None;32], ship_unit_socket_coords: &SHIP_00_SOCKET_COORDS}
+        ShipDock{x:x, y:y, ship_index:ship_index, ship_unit_sockets: [None;32], ship_unit_socket_coords: ShipDock::ship_index_to_coords_ref(ship_index)}
     }
 
     fn get_ship_icon_at(&self, x: i32, y: i32) -> Option<usize>{
@@ -45,12 +58,7 @@ impl ShipDock {
         let ship_index=self.get_ship_icon_at(x,y);
         if let Some(ship_index)=ship_index{
             self.ship_index=ship_index;
-            self.ship_unit_socket_coords=match ship_index{
-                0 => &SHIP_00_SOCKET_COORDS,
-                1 => &SHIP_01_SOCKET_COORDS,
-                2 => &SHIP_02_SOCKET_COORDS,
-                _ => panic!("manage_left_click got a wrong ship_index"),
-            }
+            self.ship_unit_socket_coords=ShipDock::ship_index_to_coords_ref(ship_index);
         }
     }
 
@@ -78,7 +86,7 @@ impl ShipDock {
 
     pub fn add_ship_unit(&mut self, ship_unit_index: Option<usize>){
         if ship_unit_index.is_some(){
-            for su in self.ship_unit_sockets.iter_mut(){
+            for su in self.ship_unit_sockets.iter_mut().take(self.ship_unit_socket_coords.len()){
                 if (*su).is_none(){
                     *su=ship_unit_index;
                     break;
