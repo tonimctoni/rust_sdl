@@ -5,15 +5,22 @@ use sdl2_image::LoadTexture;
 use sdl2::rect::Rect;
 use sdl2::pixels::Color;
 // use sdl2::render::TextureQuery;
+use sdl2_ttf::Sdl2TtfContext;
+use sdl2_ttf::Font;
+use sdl2::pixels::PixelFormatEnum;
+use sdl2::render::TextureQuery;
 
 type EightShipUnits = [Texture;8];
 type FiveShips = [Texture;5];
 type FiveShipIcons = [Texture;5];
-pub struct GraphicsManager {
+type FiveRenderedTexts = [Texture;5];
+pub struct GraphicsManager<'a> {
     renderer: Renderer<'static>,
     ship_units: Box<EightShipUnits>,
     ships: Box<FiveShips>,
     ship_icons: Box<FiveShipIcons>,
+    bitstream_vera_32:Font<'a>,
+    texts: Box<FiveRenderedTexts>,
 }
 
 const SHIP_UNIT_WIDTH: u32 = 28;
@@ -25,8 +32,8 @@ const SHIP_HEIGHT: u32 = 400;
 const SHIP_ICON_WIDTH: u32 = 80;
 const SHIP_ICON_HEIGHT: u32 = 80;
 
-impl GraphicsManager {
-    pub fn init(renderer: Renderer<'static>) -> GraphicsManager{
+impl<'a> GraphicsManager<'a> {
+    pub fn init(renderer: Renderer<'static>, ttf_context: &'a Sdl2TtfContext) -> GraphicsManager<'a>{
         GraphicsManager{
             ship_units: box [
                 renderer.load_texture(Path::new("assets/ship_units/cargo_unit.png")).unwrap(),
@@ -52,8 +59,25 @@ impl GraphicsManager {
                 renderer.load_texture(Path::new("assets/ship_icons/ship_icon03.png")).unwrap(),
                 renderer.load_texture(Path::new("assets/ship_icons/ship_icon04.png")).unwrap(),
             ],
+            bitstream_vera_32: ttf_context.load_font(Path::new("assets/ttf/bitstream_vera_sans/Vera.ttf"), 32).unwrap(),
+            texts: box [
+                renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+                renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+                renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+                renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+                renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+            ],
             renderer: renderer,
         }
+    }
+
+    pub fn set_text_with_bitstream_vera_32(&mut self, index: usize, text: &str, color: Color){
+        self.texts[index]=self.renderer.create_texture_from_surface(self.bitstream_vera_32.render(text).blended(color).unwrap()).unwrap();
+    }
+
+    pub fn draw_text(&mut self, index: usize, x: i32, y: i32){
+        let TextureQuery{width, height, ..}=self.texts[index].query();
+        self.renderer.copy(&self.texts[index], None, Some(Rect::new(x,y,width,height))).unwrap();
     }
 
     pub fn draw_ship_unit(&mut self, index: usize, x: i32, y: i32){

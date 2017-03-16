@@ -3,6 +3,7 @@ mod ship_unit_tray;
 mod ship_dock;
 mod dragged_ship_unit;
 mod ship_unit_socket_coords;
+mod text_input;
 
 use views::View;
 use sdl2::EventPump;
@@ -13,12 +14,13 @@ use self::ship_unit_tray::ShipUnitTray;
 use self::ship_dock::ShipDock;
 use self::dragged_ship_unit::DraggedShipUnit;
 use views::Drawable;
-
+use self::text_input::TextInput;
 
 pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &mut FpsCapper) -> Option<View>{
     let shipunittray=ShipUnitTray::new(10,10);
     let mut shipdock=ShipDock::new(10,50,0);
     let mut draggedshipunit=DraggedShipUnit::new();
+    let mut textinput=TextInput::new(10, 475, 0);
     loop{
         for event in event_pump.poll_iter(){
             use sdl2::event::Event::*;
@@ -29,6 +31,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                     use sdl2::keyboard::Keycode::*;
                     match keycode {
                         Some(Escape) => return None,
+                        Some(Backspace) => textinput.manage_backspace_press(gm),
                         _ => {}
                     }
                 }
@@ -39,6 +42,11 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                         Left => {
                             shipdock.manage_left_click(x, y);
                             draggedshipunit.manage_leftclicked_ship_unit(shipunittray.get_ship_unit_index_at(x, y).or(shipdock.manage_leftclicked_ship_unit(x, y)) , x, y);
+                            textinput.manage_left_click(x, y);
+                        }
+
+                        Right => {
+                            shipdock.add_ship_unit(shipunittray.get_ship_unit_index_at(x, y));
                         }
                         _ => {}
                     }
@@ -61,6 +69,15 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
                     }
                 }
 
+                // TextEditing{text, start, length, ..} => {
+                //     println!("TextEditing -> {:?}, {:?}, {:?}", text, start, length);
+                // }
+
+                TextInput{text, ..} => {
+                    println!("TextInput -> {:?}", text);
+                    textinput.manage_text_input(text, gm)
+                }
+
                 _ => {}
             }
         }
@@ -69,6 +86,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &m
         shipunittray.draw(gm);
         shipdock.draw(gm);
         draggedshipunit.draw(gm);
+        textinput.draw(gm);
         fpscapper.cap();
         gm.present();
     }
