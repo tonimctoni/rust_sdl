@@ -20,7 +20,7 @@ pub struct ShipDock {
     y: i32,
     ship_index: usize,
     ship_unit_sockets: [Option<usize>;32],
-    ship_unit_socket_coords:  &'static [(i32,i32)]
+    ship_unit_socket_coords:  &'static [(i32,i32)],
 }
 
 impl ShipDock {
@@ -40,7 +40,21 @@ impl ShipDock {
         ShipDock{x:x, y:y, ship_index:ship_index, ship_unit_sockets: [None;32], ship_unit_socket_coords: ShipDock::ship_index_to_coords_ref(ship_index)}
     }
 
-    pub fn clear_sockets(&mut self){
+    pub fn get_ship_unit_sockets(&self) -> [Option<usize>;32]{
+        self.ship_unit_sockets
+    }
+
+    pub fn get_ship_index(&self) -> usize{
+        self.ship_index
+    }
+
+    pub fn set_ship_unit_sockets_and_ship_index(&mut self, ship_data: ([Option<usize>;32], usize)){
+        self.ship_index=ship_data.1;
+        self.ship_unit_sockets=ship_data.0;
+        self.ship_unit_socket_coords=ShipDock::ship_index_to_coords_ref(ship_data.1);
+    }
+
+    pub fn clear_ship_unit_sockets(&mut self){
         for su in self.ship_unit_sockets.iter_mut(){
             *su=None;
         }
@@ -60,7 +74,7 @@ impl ShipDock {
         None
     }
 
-    pub fn manage_left_click(&mut self, x: i32, y: i32){
+    pub fn manage_leftclick(&mut self, x: i32, y: i32){
         let ship_index=self.get_ship_icon_at(x,y);
         if let Some(ship_index)=ship_index{
             self.ship_index=ship_index;

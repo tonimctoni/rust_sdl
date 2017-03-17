@@ -12,14 +12,15 @@ use sdl2::render::TextureQuery;
 type EightShipUnits = [Texture;8];
 type FiveShips = [Texture;5];
 type FiveShipIcons = [Texture;5];
-type TwoButtons = [(Texture,Texture);2];
+type ThreeButtons = [(Texture,Texture);3];
 pub struct GraphicsManager<'a> {
     renderer: Renderer<'static>,
     ship_units: Box<EightShipUnits>,
     ships: Box<FiveShips>,
     ship_icons: Box<FiveShipIcons>,
-    buttons: Box<TwoButtons>,
+    buttons: Box<ThreeButtons>,
     bitstream_vera_32:Font<'a>,
+    // bitstream_vera_16:Font<'a>,
     bitstream_vera_16bd:Font<'a>,
     texts: Vec<Texture>,
 }
@@ -36,7 +37,7 @@ const SHIP_ICON_HEIGHT: u32 = 80;
 // const BUTTON_WIDTH: u32 = 32;
 // const BUTTON_HEIGHT: u32 = 32;
 
-pub static BUTTON_DIMS: [(u32,u32);2] = [(32,32), (64,28)];
+pub static BUTTON_DIMS: [(u32,u32);3] = [(32,32), (64,28), (16,16)];
 
 impl<'a> GraphicsManager<'a> {
     pub fn init(renderer: Renderer<'static>, ttf_context: &'a Sdl2TtfContext) -> GraphicsManager<'a>{
@@ -68,8 +69,10 @@ impl<'a> GraphicsManager<'a> {
             buttons : box[
                 (renderer.load_texture(Path::new("assets/buttons/ok_blue.png")).unwrap(), renderer.load_texture(Path::new("assets/buttons/ok_red.png")).unwrap()),
                 (renderer.load_texture(Path::new("assets/buttons/clear_blue.png")).unwrap(), renderer.load_texture(Path::new("assets/buttons/clear_red.png")).unwrap()),
+                (renderer.load_texture(Path::new("assets/buttons/x_blue.png")).unwrap(), renderer.load_texture(Path::new("assets/buttons/x_red.png")).unwrap()),
             ],
             bitstream_vera_32: ttf_context.load_font(Path::new("assets/ttf/bitstream_vera_sans/Vera.ttf"), 32).unwrap(),
+            // bitstream_vera_16: ttf_context.load_font(Path::new("assets/ttf/bitstream_vera_sans/Vera.ttf"), 16).unwrap(),
             bitstream_vera_16bd: ttf_context.load_font(Path::new("assets/ttf/bitstream_vera_sans/VeraBd.ttf"), 16).unwrap(),
             texts: Vec::with_capacity(64),
             renderer: renderer,
@@ -93,6 +96,14 @@ impl<'a> GraphicsManager<'a> {
             self.texts[index]=self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap();
         }
     }
+
+    // pub fn set_text_with_bitstream_vera_16(&mut self, index: usize, text: &str, color: Color){
+    //     if text.len()>0{
+    //         self.texts[index]=self.renderer.create_texture_from_surface(self.bitstream_vera_16.render(text).blended(color).unwrap()).unwrap();
+    //     } else {
+    //         self.texts[index]=self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap();
+    //     }
+    // }
 
     pub fn set_text_with_bitstream_vera_16bd(&mut self, index: usize, text: &str, color: Color){
         if text.len()>0{

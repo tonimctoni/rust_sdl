@@ -9,15 +9,20 @@ pub struct Button {
     y: i32,
     button_index: usize,
     being_pressed: bool,
-    was_pressed: bool,
+    // was_pressed: bool,
 }
 
 impl Button {
     pub fn new(x: i32, y: i32, button_index: usize) -> Button {
-        Button{x: x, y: y, being_pressed: false, was_pressed: false, button_index: button_index}
+        Button{x: x, y: y, being_pressed: false, button_index: button_index}
     }
 
-    pub fn manage_left_click(&mut self, x: i32, y: i32){
+    pub fn set_pos(&mut self, x: i32, y: i32){
+        self.x=x;
+        self.y=y;
+    }
+
+    pub fn manage_leftclick(&mut self, x: i32, y: i32){
         self.being_pressed=if x>=self.x && x<=self.x+(BUTTON_DIMS[self.button_index].0 as i32) && y>=self.y && y<=self.y+(BUTTON_DIMS[self.button_index].1 as i32){
             true
         } else {
@@ -25,19 +30,24 @@ impl Button {
         };
     }
 
-    pub fn manage_unleft_click(&mut self, x: i32, y: i32){
+    pub fn manage_unleftclick(&mut self, x: i32, y: i32) -> bool{
         if self. being_pressed && x>=self.x && x<=self.x+(BUTTON_DIMS[self.button_index].0 as i32) && y>=self.y && y<=self.y+(BUTTON_DIMS[self.button_index].1 as i32){
-            self.was_pressed=true;
+            // self.was_pressed=true;
+            self. being_pressed=false;
+            true
+        }else{
+            self. being_pressed=false;
+            false
         }
 
-        self. being_pressed=false;
+        // self. being_pressed=false;
     }
 
-    pub fn was_pressed(&mut self) -> bool{
-        let aux=self.was_pressed;
-        self.was_pressed=false;
-        aux
-    }
+    // pub fn was_pressed(&mut self) -> bool{
+    //     let aux=self.was_pressed;
+    //     self.was_pressed=false;
+    //     aux
+    // }
 }
 
 impl Drawable for Button {

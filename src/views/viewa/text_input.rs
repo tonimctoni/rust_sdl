@@ -21,7 +21,11 @@ impl TextInput {
         TextInput{x: x, y: y, selected: false, text: String::with_capacity(16), texts_index: gm.get_new_text_index()}
     }
 
-    pub fn manage_left_click(&mut self, x: i32, y: i32){
+    pub fn get_text(&self) -> String{
+        self.text.clone()
+    }
+
+    pub fn manage_leftclick(&mut self, x: i32, y: i32){
         self.selected=if x>=self.x && x<=self.x+256 && y>=self.y && y<=self.y+32{
             true
         } else {
@@ -44,6 +48,11 @@ impl TextInput {
             self.text.pop();
             gm.set_text_with_bitstream_vera_32(self.texts_index, &self.text, TEXT_COLOR);
         }
+    }
+
+    pub fn clear_text(&mut self, gm: &mut GraphicsManager){
+        self.text.clear();
+        gm.set_text_with_bitstream_vera_32(self.texts_index, &self.text, TEXT_COLOR);
     }
 }
 
