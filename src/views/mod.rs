@@ -5,7 +5,7 @@ pub mod viewa;
 
 use self::viewa::viewa;
 use sdl2::EventPump;
-use fps_capper::FpsCapper;
+use time_manager::TimeManager;
 use graphics_manager::GraphicsManager;
 
 macro_rules! create_view_enum {
@@ -16,9 +16,9 @@ macro_rules! create_view_enum {
         }
 
         impl View{
-            pub fn run(self, event_pump: &mut EventPump, gm: &mut GraphicsManager, fpscapper: &mut FpsCapper) -> Option<View>{
+            pub fn run(self, event_pump: &mut EventPump, gm: &mut GraphicsManager, tm: &mut TimeManager) -> Option<View>{
                 match self{
-                    $(View::$function_name=>$function_name(event_pump, gm, fpscapper)),*
+                    $(View::$function_name=>$function_name(event_pump, gm, tm)),*
                 }
             }
         }
@@ -26,7 +26,3 @@ macro_rules! create_view_enum {
 }
 
 create_view_enum!(viewa);
-
-trait Drawable {
-    fn draw(&self, &mut GraphicsManager);
-}

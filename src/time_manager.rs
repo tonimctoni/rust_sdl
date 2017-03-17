@@ -2,18 +2,18 @@
 use sdl2::TimerSubsystem;
 
 
-pub struct FpsCapper {
+pub struct TimeManager {
     timer: TimerSubsystem,
     last: u32
 }
 
-impl FpsCapper {
-    pub fn init(mut timer: TimerSubsystem) -> FpsCapper {
+impl TimeManager {
+    pub fn init(mut timer: TimerSubsystem) -> TimeManager {
         let last=timer.ticks();
-        FpsCapper{timer: timer, last: last}
+        TimeManager{timer: timer, last: last}
     }
 
-    pub fn cap(&mut self){
+    pub fn cap_fps(&mut self){
         const MS_PER_FRAME: u32 = 1_000/60;
         let elapsed_ms=self.timer.ticks()-self.last;
         if elapsed_ms < MS_PER_FRAME{

@@ -1,6 +1,6 @@
 
 use graphics_manager::GraphicsManager;
-use views::Drawable;
+use graphics_manager::Drawable;
 
 
 pub struct Button {
@@ -32,11 +32,11 @@ impl Button {
         self. being_pressed=false;
     }
 
-    pub fn was_pressed(&mut self) -> bool{
-        let aux=self.was_pressed;
-        self.was_pressed=false;
-        aux
-    }
+    // pub fn was_pressed(&mut self) -> bool{
+    //     let aux=self.was_pressed;
+    //     self.was_pressed=false;
+    //     aux
+    // }
 }
 
 impl Drawable for Button {

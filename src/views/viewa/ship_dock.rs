@@ -1,6 +1,6 @@
 
 use graphics_manager::GraphicsManager;
-use views::Drawable;
+use graphics_manager::Drawable;
 use sdl2::rect::Rect;
 use sdl2::pixels::Color;
 use views::viewa::ship_unit_socket_coords::SHIP_00_SOCKET_COORDS;

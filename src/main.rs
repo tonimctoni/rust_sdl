@@ -4,11 +4,11 @@ extern crate sdl2_image;
 extern crate sdl2_ttf;
 
 mod views;
-mod fps_capper;
+mod time_manager;
 mod graphics_manager;
 // mod ttf_manager;
 use views::View;
-use fps_capper::FpsCapper;
+use time_manager::TimeManager;
 use graphics_manager::GraphicsManager;
 // use ttf_manager::TtfManager;
 // use sdl2_ttf::Sdl2TtfContext;
@@ -18,7 +18,7 @@ fn main() {
     let sdl_context = sdl2::init().unwrap();
     let video = sdl_context.video().unwrap();
     let timer = sdl_context.timer().unwrap();
-    let mut fpscapper=FpsCapper::init(timer);
+    let mut tm=TimeManager::init(timer);
     // let text_input=video.text_input();
     // text_input.start();
     // text_input.set_rect(Rect::new(520, 10, 50, 20));
@@ -41,8 +41,9 @@ fn main() {
 
     let mut current_view=Some(View::viewa);
     loop{
+        gm.empty_texts();
         match current_view{
-            Some(some_view) => {current_view=some_view.run(&mut event_pump, &mut gm, &mut fpscapper);},
+            Some(some_view) => {current_view=some_view.run(&mut event_pump, &mut gm, &mut tm);},
             None => break,
         }
     }

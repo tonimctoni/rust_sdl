@@ -1,6 +1,6 @@
 
 use graphics_manager::GraphicsManager;
-use views::Drawable;
+use graphics_manager::Drawable;
 // use sdl2::mouse::Mouse;
 use sdl2::rect::Rect;
 use sdl2::pixels::Color;

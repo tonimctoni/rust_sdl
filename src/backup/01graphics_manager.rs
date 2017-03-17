@@ -12,6 +12,7 @@ use sdl2::render::TextureQuery;
 type EightShipUnits = [Texture;8];
 type FiveShips = [Texture;5];
 type FiveShipIcons = [Texture;5];
+// type FiveRenderedTexts = [Texture;5];
 type OneButton = [Texture;1];
 pub struct GraphicsManager<'a> {
     renderer: Renderer<'static>,
@@ -21,8 +22,7 @@ pub struct GraphicsManager<'a> {
     unpressed_buttons: Box<OneButton>,
     pressed_buttons: Box<OneButton>,
     bitstream_vera_32:Font<'a>,
-    bitstream_vera_16bd:Font<'a>,
-    texts: Vec<Texture>,
+    // texts: Box<FiveRenderedTexts>,
 }
 
 const SHIP_UNIT_WIDTH: u32 = 28;
@@ -36,6 +36,12 @@ const SHIP_ICON_HEIGHT: u32 = 80;
 
 const BUTTON_WIDTH: u32 = 32;
 const BUTTON_HEIGHT: u32 = 32;
+
+pub trait Drawable {
+    fn draw(&self, &mut GraphicsManager);
+}
+
+pub struct Text(Texture);
 
 impl<'a> GraphicsManager<'a> {
     pub fn init(renderer: Renderer<'static>, ttf_context: &'a Sdl2TtfContext) -> GraphicsManager<'a>{
@@ -71,41 +77,40 @@ impl<'a> GraphicsManager<'a> {
                 renderer.load_texture(Path::new("assets/buttons/ok_red.png")).unwrap(),
             ],
             bitstream_vera_32: ttf_context.load_font(Path::new("assets/ttf/bitstream_vera_sans/Vera.ttf"), 32).unwrap(),
-            bitstream_vera_16bd: ttf_context.load_font(Path::new("assets/ttf/bitstream_vera_sans/VeraBd.ttf"), 16).unwrap(),
-            texts: Vec::with_capacity(64),
+            // texts: box [
+            //     renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+            //     renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+            //     renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+            //     renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+            //     renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap(),
+            // ],
             renderer: renderer,
         }
     }
 
-    pub fn empty_texts(&mut self){
-        self.texts.clear();
+    pub fn create_empty_text(&mut self) -> Text {
+        Text(self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap())
     }
 
-    pub fn get_new_text_index(&mut self) -> usize{
-        self.texts.push(self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap());
-        if self.texts.len()>=64{panic!("Possible memory leak: FIX IT!!");}
-        self.texts.len()-1
-    }
-
-    pub fn set_text_with_bitstream_vera_32(&mut self, index: usize, text: &str, color: Color){
+    pub fn create_text_with_bitstream_vera_32(&mut self, text: &str, color: Color) -> Text {
         if text.len()>0{
-            self.texts[index]=self.renderer.create_texture_from_surface(self.bitstream_vera_32.render(text).blended(color).unwrap()).unwrap();
+            Text(self.renderer.create_texture_from_surface(self.bitstream_vera_32.render(text).blended(color).unwrap()).unwrap())
         } else {
-            self.texts[index]=self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap();
+            Text(self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap())
         }
     }
 
-    pub fn set_text_with_bitstream_vera_16bd(&mut self, index: usize, text: &str, color: Color){
-        if text.len()>0{
-            self.texts[index]=self.renderer.create_texture_from_surface(self.bitstream_vera_16bd.render(text).blended(color).unwrap()).unwrap();
-        } else {
-            self.texts[index]=self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap();
-        }
-    }
+    // pub fn set_text_with_bitstream_vera_32(&mut self, index: usize, text: &str, color: Color){
+    //     if text.len()>0{
+    //         self.texts[index]=self.renderer.create_texture_from_surface(self.bitstream_vera_32.render(text).blended(color).unwrap()).unwrap();
+    //     } else {
+    //         self.texts[index]=self.renderer.create_texture_static(PixelFormatEnum::RGB332, 1, 1).unwrap();
+    //     }
+    // }
 
-    pub fn draw_text(&mut self, index: usize, x: i32, y: i32){
-        let TextureQuery{width, height, ..}=self.texts[index].query();
-        self.renderer.copy(&self.texts[index], None, Some(Rect::new(x,y,width,height))).unwrap();
+    pub fn draw_text(&mut self, text: &Text, x: i32, y: i32){
+        let TextureQuery{width, height, ..}=text.0.query();
+        self.renderer.copy(&text.0, None, Some(Rect::new(x,y,width,height))).unwrap();
     }
 
     pub fn draw_unpressed_button(&mut self, index: usize, x: i32, y: i32){
@@ -146,8 +151,4 @@ impl<'a> GraphicsManager<'a> {
     pub fn present(&mut self){
         self.renderer.present();
     }
-}
-
-pub trait Drawable {
-    fn draw(&self, &mut GraphicsManager);
 }
