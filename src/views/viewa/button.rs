@@ -1,6 +1,7 @@
 
 use graphics_manager::GraphicsManager;
 use graphics_manager::Drawable;
+use graphics_manager::BUTTON_DIMS;
 
 
 pub struct Button {
@@ -17,7 +18,7 @@ impl Button {
     }
 
     pub fn manage_left_click(&mut self, x: i32, y: i32){
-        self.being_pressed=if x>=self.x && x<=self.x+32 && y>=self.y && y<=self.y+32{
+        self.being_pressed=if x>=self.x && x<=self.x+(BUTTON_DIMS[self.button_index].0 as i32) && y>=self.y && y<=self.y+(BUTTON_DIMS[self.button_index].1 as i32){
             true
         } else {
             false
@@ -25,18 +26,18 @@ impl Button {
     }
 
     pub fn manage_unleft_click(&mut self, x: i32, y: i32){
-        if self. being_pressed && x>=self.x && x<=self.x+32 && y>=self.y && y<=self.y+32{
+        if self. being_pressed && x>=self.x && x<=self.x+(BUTTON_DIMS[self.button_index].0 as i32) && y>=self.y && y<=self.y+(BUTTON_DIMS[self.button_index].1 as i32){
             self.was_pressed=true;
         }
 
         self. being_pressed=false;
     }
 
-    // pub fn was_pressed(&mut self) -> bool{
-    //     let aux=self.was_pressed;
-    //     self.was_pressed=false;
-    //     aux
-    // }
+    pub fn was_pressed(&mut self) -> bool{
+        let aux=self.was_pressed;
+        self.was_pressed=false;
+        aux
+    }
 }
 
 impl Drawable for Button {

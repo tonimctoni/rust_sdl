@@ -26,7 +26,8 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, tm: &mut Time
     let mut draggedshipunit=DraggedShipUnit::new();
     let mut textinput=TextInput::new(10+280, 475, gm);
     let mut ok_button=Button::new(10+280+256+5,475+3,0);
-    let mut errormessage=ErrorMessage::new(400, 580, gm);
+    let mut clear_button=Button::new(580, 14 ,1);
+    let mut errormessage=ErrorMessage::new(350, 580, gm);
     loop{
         for event in event_pump.poll_iter(){
             use sdl2::event::Event::*;
@@ -50,6 +51,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, tm: &mut Time
                             draggedshipunit.manage_leftclicked_ship_unit(shipunittray.get_ship_unit_index_at(x, y).or(shipdock.manage_leftclicked_ship_unit(x, y)) , x, y);
                             textinput.manage_left_click(x, y);
                             ok_button.manage_left_click(x, y);
+                            clear_button.manage_left_click(x, y);
                         }
 
                         Right => {
@@ -71,6 +73,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, tm: &mut Time
                         Left => {
                             shipdock.manage_unleftclicked_ship_unit(draggedshipunit.manage_unleftclick(), x, y);
                             ok_button.manage_unleft_click(x, y);
+                            clear_button.manage_unleft_click(x, y);
                         }
                         _ => {}
                     }
@@ -82,7 +85,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, tm: &mut Time
 
                 TextInput{text, ..} => {
                     if !textinput.manage_text_input(text, gm){
-                        errormessage.set_message("Ships name may only be 10 characters long.", gm);
+                        errormessage.set_message("Ship's name may only be up to 10 characters long.", gm);
                     }
                 }
 
@@ -92,6 +95,10 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, tm: &mut Time
         //Further logic part
         errormessage.manage_frame_pass();
 
+        if clear_button.was_pressed(){
+            shipdock.clear_sockets();
+        }
+
         //Drawing part
         gm.set_draw_color(Color::RGB(0, 0, 0));
         gm.clear();
@@ -100,6 +107,7 @@ pub fn viewa(event_pump: &mut EventPump, gm: &mut GraphicsManager, tm: &mut Time
         draggedshipunit.draw(gm);
         textinput.draw(gm);
         ok_button.draw(gm);
+        clear_button.draw(gm);
         errormessage.draw(gm);
         tm.cap_fps();
         gm.present();

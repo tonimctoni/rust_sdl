@@ -40,6 +40,12 @@ impl ShipDock {
         ShipDock{x:x, y:y, ship_index:ship_index, ship_unit_sockets: [None;32], ship_unit_socket_coords: ShipDock::ship_index_to_coords_ref(ship_index)}
     }
 
+    pub fn clear_sockets(&mut self){
+        for su in self.ship_unit_sockets.iter_mut(){
+            *su=None;
+        }
+    }
+
     fn get_ship_icon_at(&self, x: i32, y: i32) -> Option<usize>{
         if x<self.x+407+2 || x>self.x+407+80-2{
             return None;
